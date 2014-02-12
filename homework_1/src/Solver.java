@@ -58,16 +58,46 @@ public class Solver {
     }
 
     public static void main(String[] args) {
+    	
         if (args.length < 2) {
             System.err.println("Usage : Token heuristic inputFile");
             System.exit(-1);
         }
+        
+    	/**TODO
+    	 * Change args part!!!!!!!!1!!!!!!!!!!!!!!!!!!!!!
+    	 */
 	heuristic = args[0];		
 	inputfile = args[1];
-        Initialize(inputfile);
+    Initialize(inputfile); 
+    
+   
+    
+    HammingHeuristic hamming = new HammingHeuristic();
+    ManhattanHeuristic manhattan = new ManhattanHeuristic();
+
+    //System.out.println("Hamming Cost = " + hamming.getCost(initialBoard, goalBoard));
+    //System.out.println("Manhattan Cost = " + manhattan.getCost(initialBoard, goalBoard));
+   
+    
 	if (heuristic.equals("empty"))
 	{
         	AStar searcher = new AStar(initialBoard, goalBoard, new EmptyHeuristic());	//Choose heuristic function according to the input argument 0
+        	searcher.search();
+	}
+	else if (heuristic.equals("hamming"))
+	{
+        	AStar searcher = new AStar(initialBoard, goalBoard, new HammingHeuristic());	
+        	searcher.search();
+	}
+	else if (heuristic.equals("manhattan"))
+	{
+        	AStar searcher = new AStar(initialBoard, goalBoard, new ManhattanHeuristic());	
+        	searcher.search();
+	}
+	else 
+	{
+        	AStar searcher = new AStar(initialBoard, goalBoard, new myHeuristic());	
         	searcher.search();
 	}
     }
