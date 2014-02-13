@@ -64,9 +64,7 @@ public class Solver {
             System.exit(-1);
         }
         
-    	/**TODO
-    	 * Change args part!!!!!!!!1!!!!!!!!!!!!!!!!!!!!!
-    	 */
+
 	heuristic = args[0];		
 	inputfile = args[1];
     Initialize(inputfile); 

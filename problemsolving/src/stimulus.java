@@ -5,7 +5,7 @@ public class stimulus {
 	 */
 	public static void main(String[] args) {
 		
-		double N = 2;
+		double N = 400;
 		double M = 1;
 		int counter = 0;
 		if (N == 0) {

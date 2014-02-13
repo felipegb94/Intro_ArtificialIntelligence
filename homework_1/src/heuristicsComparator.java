@@ -10,11 +10,14 @@ public class heuristicsComparator implements Comparator<Board> {
 		int f2 = b2.getF();
 		
 		if(f1 < f2){
+			//gives b1 a higher priority that b2
 			return -1;
 		}
 		else if(f1 > f2){
+			//gives b2 a higher priority that b1
 			return 1;
 		}
+		//b1 = b2
 		return 0;
 	}
 

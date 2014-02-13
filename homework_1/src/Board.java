@@ -7,6 +7,7 @@ public class Board implements Comparator<Board> {
 	public static int columns=3;
 	private Board parent = null; /* only initial board's parent is null */
 	public int[][] tiles;
+	public String tilesString;
 	private int currEmptyRow;
 	private int currEmptyCol;
 	private int g; //Actual Cost of getting to this board
@@ -17,17 +18,21 @@ public class Board implements Comparator<Board> {
 	{
 	  this.g = 0;
 	  this.h = 0;
+	  tilesString ="";
 	  tiles = new int[rows][columns];
-		for (int i = 0 ;i<rows; i++)
+		for (int i = 0 ;i<rows; i++){
 			for (int j = 0; j<columns; j++)
 			{
 				tiles[i][j] = cells[i][j];
+				tilesString += tiles[i][j] + "	"; 
 				//Keep track of where the empty tile is for generating successor later
 				if(tiles[i][j] == 0){
 					this.setCurrEmptyRow(i);
 					this.setCurrEmptyCol(j);
 				}
 			}
+			tilesString += "\n";
+		}
 	}
 	public boolean equals(Object x)         //Can be used for repeated state checking
 	{
@@ -42,10 +47,37 @@ public class Board implements Comparator<Board> {
 	public ArrayList<Board> getSuccessors()     //Use cyclic ordering for expanding nodes - Right, Down, Left, Up
 	{
 		/* TODO */
+		
 		Board b;
 		int tileToMove = 0;
 		ArrayList<Board> successors = new ArrayList<Board>();
 		int[][] succesorTiles = copyTiles(); //Create copy of current tiles
+		
+		//Move empty space right/Tile left. Check that we are not in the right most column and the tile to the right is not an inaccessible square
+		if((currEmptyCol < succesorTiles[0].length-1) && succesorTiles[currEmptyRow][currEmptyCol+1] != -1){ 
+			tileToMove = succesorTiles[currEmptyRow][currEmptyCol+1]; //Get the tile to the right
+			succesorTiles[currEmptyRow][currEmptyCol+1] = 0; //Set the tile to the right to be the new empty tile
+			succesorTiles[currEmptyRow][currEmptyCol] = tileToMove; //Move tile to its new position (its left)
+			b = new Board(succesorTiles);
+			b.setParent(this);
+			successors.add(b);
+		}
+		
+		
+		succesorTiles = copyTiles();		
+
+		//Move empty space down/Tile up. Check that we are not in the bottom most row and that the tile below 0 is accessible
+		if((currEmptyRow < succesorTiles.length-1) && succesorTiles[currEmptyRow+1][currEmptyCol] != -1){
+			tileToMove = succesorTiles[currEmptyRow+1][currEmptyCol];
+			succesorTiles[currEmptyRow+1][currEmptyCol] = 0;
+			succesorTiles[currEmptyRow][currEmptyCol] = tileToMove;
+			b = new Board(succesorTiles);
+			b.setParent(this);
+			successors.add(b);
+		}		
+		
+		succesorTiles = copyTiles();
+
 		
 		//Move empty space left/Tile Right. Check that we are not in the left most column and the tile to the left is not an inaccessible square
 		if((currEmptyCol > 0) && succesorTiles[currEmptyRow][currEmptyCol-1] != -1){ 
@@ -53,39 +85,19 @@ public class Board implements Comparator<Board> {
 			succesorTiles[currEmptyRow][currEmptyCol-1] = 0; //Set the tile to the left to be the new empty tile
 			succesorTiles[currEmptyRow][currEmptyCol] = tileToMove; //Move tile to its new position (its right)
 			b = new Board(succesorTiles);
+			b.setParent(this);
 			successors.add(b);
 		}
 		
-		
-		succesorTiles = copyTiles();		
+		succesorTiles = copyTiles();
+
 		//Move empty space up/Tile down. Check that we are not in the top most row and that the tile above 0 is accessible
 		if((currEmptyRow > 0) && succesorTiles[currEmptyRow-1][currEmptyCol] != -1){
 			tileToMove = succesorTiles[currEmptyRow-1][currEmptyCol];
 			succesorTiles[currEmptyRow-1][currEmptyCol] = 0;
 			succesorTiles[currEmptyRow][currEmptyCol] = tileToMove;
 			b = new Board(succesorTiles);
-			successors.add(b);
-		}
-		
-		
-		succesorTiles = copyTiles();
-		//Move empty space right/Tile left. Check that we are not in the right most column and the tile to the right is not an inaccessible square
-		if((currEmptyCol < succesorTiles[0].length-1) && succesorTiles[currEmptyRow][currEmptyCol+1] != -1){ 
-			tileToMove = succesorTiles[currEmptyRow][currEmptyCol+1]; //Get the tile to the right
-			succesorTiles[currEmptyRow][currEmptyCol+1] = 0; //Set the tile to the right to be the new empty tile
-			succesorTiles[currEmptyRow][currEmptyCol] = tileToMove; //Move tile to its new position (its left)
-			b = new Board(succesorTiles);
-			successors.add(b);
-		}
-		
-		
-		succesorTiles = copyTiles();
-		//Move empty space down/Tile up. Check that we are not in the bottom most row and that the tile below 0 is accessible
-		if((currEmptyRow < succesorTiles.length-1) && succesorTiles[currEmptyRow+1][currEmptyCol] != -1){
-			tileToMove = succesorTiles[currEmptyRow+1][currEmptyCol];
-			succesorTiles[currEmptyRow+1][currEmptyCol] = 0;
-			succesorTiles[currEmptyRow][currEmptyCol] = tileToMove;
-			b = new Board(succesorTiles);
+			b.setParent(this);
 			successors.add(b);
 		}
 		
@@ -166,6 +178,9 @@ public class Board implements Comparator<Board> {
 	}
 	public int getF() {
 		return f;
+	}
+	public String toString(){
+		return tilesString;
 	}
 	
 }
