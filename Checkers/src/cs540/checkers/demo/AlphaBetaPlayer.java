@@ -40,4 +40,10 @@ public class AlphaBetaPlayer extends CheckersPlayer implements GradedCheckersPla
     {
         return pruneCount;
     }
+
+	@Override
+	public int getLastPrunedNodeScore() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }
